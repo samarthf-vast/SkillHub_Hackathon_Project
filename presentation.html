@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkillHub — Hackathon Presentation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+
+  /* ── Print / PDF styles ── */
+  @media print {
+    body { background: white; }
+    .slide { page-break-after: always; box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; width: 100% !important; max-width: 100% !important; }
+    .slide:last-child { page-break-after: avoid; }
+    .print-btn { display: none !important; }
+    .toc { display: none !important; }
+  }
+
+  /* ── Layout ── */
+  .print-btn {
+    position: fixed; top: 20px; right: 20px; z-index: 100;
+    background: #4f46e5; color: white; border: none; cursor: pointer;
+    padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    box-shadow: 0 4px 12px rgba(79,70,229,0.4);
+    transition: background 0.2s;
+  }
+  .print-btn:hover { background: #4338ca; }
+
+  .toc {
+    max-width: 860px; margin: 30px auto 0; padding: 0 20px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .toc a {
+    background: white; color: #4f46e5; text-decoration: none;
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1px solid #e0e7ff;
+  }
+
+  .slides { max-width: 860px; margin: 20px auto 60px; padding: 0 20px; display: flex; flex-direction: column; gap: 24px; }
+
+  .slide {
+    background: white; border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden; position: relative;
+    min-height: 480px; display: flex; flex-direction: column;
+  }
+
+  /* ── Slide number badge ── */
+  .slide-num {
+    position: absolute; top: 18px; right: 22px;
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.6);
+    letter-spacing: 1px;
+  }
+  .slide-num.dark { color: rgba(0,0,0,0.25); }
+
+  /* ── SLIDE 1 — Title ── */
+  .s1 {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 60%, #a855f7 100%);
+    color: white; justify-content: center; align-items: flex-start; padding: 60px 56px;
+  }
+  .s1 .tag {
+    background: rgba(255,255,255,0.2); display: inline-block;
+    padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .s1 h1 { font-size: 52px; font-weight: 800; line-height: 1.1; margin-bottom: 12px; }
+  .s1 h1 span { color: #a5f3fc; }
+  .s1 .subtitle { font-size: 18px; color: rgba(255,255,255,0.8); max-width: 520px; line-height: 1.6; margin-bottom: 36px; }
+  .s1 .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .s1 .chip {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;
+  }
+  .s1 .deco {
+    position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+    font-size: 120px; opacity: 0.12; user-select: none;
+  }
+
+  /* ── SLIDE 2 — Problem ── */
+  .s2 { padding: 48px 56px; }
+  .slide-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: #4f46e5; margin-bottom: 10px;
+  }
+  .slide-title { font-size: 32px; font-weight: 800; color: #0f172a; margin-bottom: 32px; }
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .problem-card {
+    background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 20px 22px;
+  }
+  .problem-card .icon { font-size: 28px; margin-bottom: 10px; }
+  .problem-card h3 { font-size: 15px; font-weight: 700; color: #991b1b; margin-bottom: 6px; }
+  .problem-card p { font-size: 13px; color: #7f1d1d; line-height: 1.5; }
+  .problem-stat {
+    margin-top: 28px; background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 20px;
+  }
+  .problem-stat .big { font-size: 48px; font-weight: 900; color: #92400e; }
+  .problem-stat p { font-size: 15px; color: #78350f; line-height: 1.5; }
+
+  /* ── SLIDE 3 — Solution ── */
+  .s3 {
+    background: linear-gradient(160deg, #f0fdf4 0%, #ecfdf5 100%);
+    padding: 48px 56px;
+  }
+  .solution-steps { display: flex; gap: 0; margin-top: 8px; }
+  .step {
+    flex: 1; text-align: center; padding: 20px 12px; position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%); font-size: 20px; color: #10b981; font-weight: 700;
+  }
+  .step .num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white; font-weight: 800; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .step .emoji { font-size: 32px; margin-bottom: 8px; }
+  .step h3 { font-size: 13px; font-weight: 700; color: #065f46; margin-bottom: 4px; }
+  .step p { font-size: 11px; color: #047857; line-height: 1.4; }
+  .solution-highlight {
+    margin-top: 28px; background: white; border: 2px solid #10b981;
+    border-radius: 12px; padding: 18px 24px; display: flex; align-items: center; gap: 16px;
+  }
+  .solution-highlight .icon { font-size: 32px; }
+  .solution-highlight p { font-size: 14px; color: #065f46; font-weight: 500; line-height: 1.5; }
+  .solution-highlight strong { color: #047857; }
+
+  /* ── SLIDE 4 — Tech Stack ── */
+  .s4 { padding: 48px 56px; }
+  .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 8px; }
+  .tech-card {
+    border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px;
+    transition: border-color 0.2s;
+  }
+  .tech-card .tech-icon { font-size: 28px; margin-bottom: 8px; }
+  .tech-card h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .tech-card p { font-size: 12px; color: #64748b; line-height: 1.4; }
+  .tech-card.ai { background: #f5f3ff; border-color: #c4b5fd; }
+  .tech-card.db { background: #f0fdf4; border-color: #86efac; }
+  .tech-card.auth { background: #fff7ed; border-color: #fdba74; }
+  .tech-card.ui { background: #fdf4ff; border-color: #e879f9; }
+  .tech-card.fw { background: #eff6ff; border-color: #93c5fd; }
+  .tech-card.orm { background: #f0fdf4; border-color: #6ee7b7; }
+
+  /* ── SLIDE 5 — AI Pipeline ── */
+  .s5 {
+    background: linear-gradient(160deg, #0f0f1a 0%, #1e1b4b 100%);
+    padding: 48px 56px; color: white;
+  }
+  .s5 .slide-label { color: #a5b4fc; }
+  .s5 .slide-title { color: white; }
+  .pipeline { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+  .pipe-row {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 14px 20px;
+  }
+  .pipe-row .pipe-icon { font-size: 24px; flex-shrink: 0; width: 36px; text-align: center; }
+  .pipe-row .pipe-label { font-size: 13px; font-weight: 700; color: #a5b4fc; width: 140px; flex-shrink: 0; }
+  .pipe-row .pipe-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+  .pipe-arrow { text-align: center; color: #6366f1; font-size: 18px; }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    margin-top: 16px;
+  }
+
+  /* ── SLIDE 6 — Features ── */
+  .s6 { padding: 48px 56px; }
+  .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+  .feature-card {
+    border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .feature-card.blue::before { background: linear-gradient(90deg, #4f46e5, #7c3aed); }
+  .feature-card.green::before { background: linear-gradient(90deg, #10b981, #059669); }
+  .feature-card.amber::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .feature-card.rose::before { background: linear-gradient(90deg, #f43f5e, #e11d48); }
+  .feature-card .feat-icon { font-size: 28px; margin-bottom: 10px; }
+  .feature-card h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+  .feature-card ul { list-style: none; }
+  .feature-card ul li { font-size: 12px; color: #475569; padding: 2px 0; line-height: 1.5; }
+  .feature-card ul li::before { content: '✓ '; color: #10b981; font-weight: 700; }
+
+  /* ── SLIDE 7 — Screenshots ── */
+  .s7 { padding: 40px 56px; }
+  .screenshots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+  .screenshot-box {
+    border: 2px dashed #cbd5e1; border-radius: 12px;
+    background: #f8fafc; min-height: 180px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; position: relative; overflow: hidden;
+  }
+  .screenshot-box img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 10px; display: block;
+  }
+  .screenshot-box .placeholder { text-align: center; padding: 20px; }
+  .screenshot-box .placeholder .ph-icon { font-size: 28px; margin-bottom: 6px; }
+  .screenshot-box .placeholder p { font-size: 12px; color: #94a3b8; font-weight: 500; }
+  .screenshot-box .caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(15,23,42,0.75); backdrop-filter: blur(4px);
+    color: white; font-size: 12px; font-weight: 600; padding: 6px 12px;
+    text-align: center;
+  }
+
+  /* ── SLIDE 8 — Judging Criteria ── */
+  .s8 { padding: 48px 56px; }
+  .criteria-list { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .criterion {
+    display: flex; align-items: flex-start; gap: 16px;
+    border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px;
+  }
+  .criterion .weight {
+    flex-shrink: 0; width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900;
+  }
+  .criterion.w30 .weight { background: #eff6ff; color: #1d4ed8; }
+  .criterion.w25 .weight { background: #f5f3ff; color: #6d28d9; }
+  .criterion.w20 .weight { background: #f0fdf4; color: #065f46; }
+  .criterion.w15 .weight { background: #fff7ed; color: #9a3412; }
+  .criterion.w10 .weight { background: #fdf4ff; color: #7e22ce; }
+  .criterion .crit-content { flex: 1; }
+  .criterion .crit-content h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .criterion .crit-content p { font-size: 12px; color: #475569; line-height: 1.5; }
+  .criterion .check { font-size: 18px; flex-shrink: 0; }
+  .progress-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+  .progress-bar .fill { height: 100%; border-radius: 3px; }
+  .criterion.w30 .fill { background: #2563eb; width: 95%; }
+  .criterion.w25 .fill { background: #7c3aed; width: 90%; }
+  .criterion.w20 .fill { background: #059669; width: 92%; }
+  .criterion.w15 .fill { background: #ea580c; width: 88%; }
+  .criterion.w10 .fill { background: #9333ea; width: 85%; }
+
+  /* ── SLIDE 9 — What's Next ── */
+  .s9 {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+    padding: 48px 56px; color: white;
+  }
+  .s9 .slide-label { color: #a5b4fc; }
+  .s9 .slide-title { color: white; }
+  .next-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 8px; }
+  .next-card {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 20px;
+  }
+  .next-card .next-icon { font-size: 28px; margin-bottom: 10px; }
+  .next-card h3 { font-size: 14px; font-weight: 700; color: #a5b4fc; margin-bottom: 8px; }
+  .next-card ul { list-style: none; }
+  .next-card ul li { font-size: 12px; color: rgba(255,255,255,0.65); padding: 2px 0; line-height: 1.5; }
+  .next-card ul li::before { content: '→ '; color: #6366f1; font-weight: 700; }
+
+  /* ── SLIDE 10 — Thank You ── */
+  .s10 {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 60%, #a855f7 100%);
+    color: white; justify-content: center; align-items: center;
+    padding: 60px 56px; text-align: center;
+  }
+  .s10 h1 { font-size: 52px; font-weight: 900; margin-bottom: 16px; }
+  .s10 h1 span { color: #a5f3fc; }
+  .s10 .tagline { font-size: 20px; color: rgba(255,255,255,0.8); max-width: 500px; line-height: 1.6; margin-bottom: 40px; }
+  .s10 .built-with { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .s10 .bw-chip {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 18px; border-radius: 20px; font-size: 14px; font-weight: 600;
+  }
+  .s10 .deco2 { font-size: 100px; opacity: 0.1; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">⬇ Export to PDF</button>
+
+<div class="toc">
+  <a href="#s1">Title</a>
+  <a href="#s2">Problem</a>
+  <a href="#s3">Solution</a>
+  <a href="#s4">Tech Stack</a>
+  <a href="#s5">AI Pipeline</a>
+  <a href="#s6">Features</a>
+  <a href="#s7">Screenshots</a>
+  <a href="#s8">Judging Criteria</a>
+  <a href="#s9">What's Next</a>
+  <a href="#s10">Thank You</a>
+</div>
+
+<div class="slides">
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 1 — TITLE                           -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s1" id="s1">
+    <div class="slide-num">01 / 10</div>
+    <div class="tag">🏆 Hackathon Project — VAST 2025</div>
+    <h1>Skill<span>Hub</span></h1>
+    <p class="subtitle">An AI-powered Skills Intelligence Platform that eliminates manual skill mapping — employees upload a resume, AI extracts everything, HR searches talent in plain English.</p>
+    <div class="chips">
+      <span class="chip">🤖 Groq + Llama 3.3</span>
+      <span class="chip">⚡ Next.js 14</span>
+      <span class="chip">🗄️ Prisma + SQLite</span>
+      <span class="chip">🔐 Role-Based Auth</span>
+    </div>
+    <div class="deco">🧠</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 2 — PROBLEM                         -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s2" id="s2">
+    <div class="slide-num dark">02 / 10</div>
+    <div class="slide-label">The Problem</div>
+    <div class="slide-title">HR teams waste hours on manual skill mapping</div>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="icon">📋</div>
+        <h3>Manual Spreadsheets</h3>
+        <p>HR managers maintain Excel sheets with employee skills — outdated the moment they're created.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">🔍</div>
+        <h3>No Smart Search</h3>
+        <p>Finding "a React developer with WebSocket experience in Pune" requires manually scanning every profile.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">⏳</div>
+        <h3>Slow Onboarding</h3>
+        <p>New employees' skills aren't captured — HR doesn't know who knows what until a project starts.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">❌</div>
+        <h3>No Validation</h3>
+        <p>Employees self-report skills with no HR verification — leads to over/under allocation on projects.</p>
+      </div>
+    </div>
+    <div class="problem-stat">
+      <div class="big">73%</div>
+      <p>of HR managers report spending <strong>more than 5 hours per week</strong> manually tracking employee skills and availability across spreadsheets.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 3 — SOLUTION                        -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s3" id="s3">
+    <div class="slide-num dark">03 / 10</div>
+    <div class="slide-label">The Solution</div>
+    <div class="slide-title">SkillHub automates the entire skills lifecycle</div>
+    <div class="solution-steps">
+      <div class="step">
+        <div class="emoji">📄</div>
+        <div class="num">1</div>
+        <h3>Upload Resume</h3>
+        <p>Employee uploads PDF resume — one time</p>
+      </div>
+      <div class="step">
+        <div class="emoji">🤖</div>
+        <div class="num">2</div>
+        <h3>AI Extracts</h3>
+        <p>Llama 3.3 extracts skills, projects, certs, LinkedIn</p>
+      </div>
+      <div class="step">
+        <div class="emoji">✅</div>
+        <div class="num">3</div>
+        <h3>HR Reviews</h3>
+        <p>Human-in-the-loop approval before going live</p>
+      </div>
+      <div class="step">
+        <div class="emoji">🔍</div>
+        <div class="num">4</div>
+        <h3>AI Search</h3>
+        <p>HR searches talent in plain English</p>
+      </div>
+      <div class="step">
+        <div class="emoji">🎯</div>
+        <div class="num">5</div>
+        <h3>Ranked Results</h3>
+        <p>Candidates ranked with match scores + AI reasoning</p>
+      </div>
+    </div>
+    <div class="solution-highlight">
+      <div class="icon">💡</div>
+      <p>SkillHub is the <strong>only platform that combines AI extraction + human review + natural language search</strong> — giving HR the speed of AI with the accuracy of human judgment.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 4 — TECH STACK                      -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s4" id="s4">
+    <div class="slide-num dark">04 / 10</div>
+    <div class="slide-label">Technology</div>
+    <div class="slide-title">Production-grade tech stack</div>
+    <div class="tech-grid">
+      <div class="tech-card fw">
+        <div class="tech-icon">⚡</div>
+        <h3>Next.js 14 + TypeScript</h3>
+        <p>App Router, Server Components, API Routes — full-stack in one framework</p>
+      </div>
+      <div class="tech-card ai">
+        <div class="tech-icon">🧠</div>
+        <h3>Groq — Llama 3.3 70B</h3>
+        <p>World's fastest LLM inference. Used for resume extraction + semantic search re-ranking</p>
+      </div>
+      <div class="tech-card auth">
+        <div class="tech-icon">🔐</div>
+        <h3>NextAuth.js</h3>
+        <p>JWT-based role auth — HR vs Employee routing, session management</p>
+      </div>
+      <div class="tech-card orm">
+        <div class="tech-icon">🗄️</div>
+        <h3>Prisma ORM + SQLite</h3>
+        <p>Type-safe database access. Zero-config SQLite — runs instantly without any cloud setup</p>
+      </div>
+      <div class="tech-card ui">
+        <div class="tech-icon">🎨</div>
+        <h3>Tailwind CSS + Radix UI</h3>
+        <p>Utility-first styling with accessible, unstyled component primitives</p>
+      </div>
+      <div class="tech-card db">
+        <div class="tech-icon">📄</div>
+        <h3>pdf-parse + pdftotext</h3>
+        <p>Server-side PDF text extraction — feeds raw text directly to the LLM</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 5 — AI PIPELINE                     -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s5" id="s5">
+    <div class="slide-num">05 / 10</div>
+    <div class="slide-label">Under the Hood</div>
+    <div class="slide-title">Two AI pipelines — extraction &amp; search</div>
+    <div class="pipeline">
+      <div class="pipe-row">
+        <div class="pipe-icon">📄</div>
+        <div class="pipe-label">PDF Upload</div>
+        <div class="pipe-desc">Employee uploads resume → <code>pdf-parse</code> extracts raw text on server</div>
+      </div>
+      <div class="pipe-arrow">↓</div>
+      <div class="pipe-row">
+        <div class="pipe-icon">🤖</div>
+        <div class="pipe-label">LLM Extraction</div>
+        <div class="pipe-desc">Groq Llama 3.3 70B reads resume → returns structured JSON: skills (name, category, proficiency, years), projects, certifications, LinkedIn URL</div>
+      </div>
+      <div class="pipe-arrow">↓</div>
+      <div class="pipe-row">
+        <div class="pipe-icon">⚙️</div>
+        <div class="pipe-label">Skill Inference</div>
+        <div class="pipe-desc">Rules engine infers related skills — if Next.js found → React + JavaScript auto-added. 13 inference rules covering major tech stacks</div>
+      </div>
+      <div class="pipe-arrow">↓</div>
+      <div class="pipe-row">
+        <div class="pipe-icon">✅</div>
+        <div class="pipe-label">HR Review Gate</div>
+        <div class="pipe-desc">Profile sits PENDING until HR approves. Human-in-the-loop ensures data quality. HR name recorded on every approval.</div>
+      </div>
+      <div class="pipe-arrow">↓</div>
+      <div class="pipe-row">
+        <div class="pipe-icon">🔍</div>
+        <div class="pipe-label">Semantic Search</div>
+        <div class="pipe-desc">HR types natural language query → LLM reads all employee profiles → returns ranked list with match score 0–100 and written reasoning per candidate</div>
+      </div>
+    </div>
+    <span class="ai-badge">✨ Both pipelines use Groq Llama 3.3 70B — called sequentially to stay within rate limits</span>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 6 — FEATURES                        -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s6" id="s6">
+    <div class="slide-num dark">06 / 10</div>
+    <div class="slide-label">Features</div>
+    <div class="slide-title">Complete HR &amp; Employee experience</div>
+    <div class="features-grid">
+      <div class="feature-card blue">
+        <div class="feat-icon">🔍</div>
+        <h3>AI Talent Search</h3>
+        <ul>
+          <li>Natural language queries — no filters needed</li>
+          <li>Match scores 0–100 per candidate</li>
+          <li>AI reasoning explaining each match</li>
+          <li>Pending profiles shown in separate section</li>
+          <li>Dynamic example queries from real DB skills</li>
+        </ul>
+      </div>
+      <div class="feature-card green">
+        <div class="feat-icon">✅</div>
+        <h3>HR Review Queue</h3>
+        <ul>
+          <li>All pending resumes in one place</li>
+          <li>Full extracted data preview before approving</li>
+          <li>LinkedIn URL shown from resume text</li>
+          <li>Inferred skills highlighted separately</li>
+          <li>HR name saved on every approval</li>
+        </ul>
+      </div>
+      <div class="feature-card amber">
+        <div class="feat-icon">👥</div>
+        <h3>Employee Directory</h3>
+        <ul>
+          <li>Section-wise: Approved / Pending / Rejected / No Resume</li>
+          <li>Extracted skills shown even for pending/rejected</li>
+          <li>Search by name, skill, location, designation</li>
+          <li>Click through to full profile with all data</li>
+          <li>Availability status badge per employee</li>
+        </ul>
+      </div>
+      <div class="feature-card rose">
+        <div class="feat-icon">📄</div>
+        <h3>Employee Self-Service</h3>
+        <ul>
+          <li>PDF resume upload → instant AI extraction</li>
+          <li>See rejection note from HR with reason</li>
+          <li>Extracted data still visible after rejection</li>
+          <li>Manual skill &amp; project add/remove</li>
+          <li>Profile info editing + password change</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 7 — SCREENSHOTS                     -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s7" id="s7">
+    <div class="slide-num dark">07 / 10</div>
+    <div class="slide-label">Live Demo</div>
+    <div class="slide-title">Product screenshots</div>
+    <div class="screenshots-grid">
+
+      <!-- Screenshot 1 — replace src with your actual screenshot path -->
+      <div class="screenshot-box">
+        <!-- REPLACE THIS with: <img src="./docs/screenshots/hr-search.png" alt="AI Search" /> -->
+        <div class="placeholder">
+          <div class="ph-icon">🔍</div>
+          <p><strong>HR — AI Search</strong><br/>Add screenshot:<br/>hr-search.png</p>
+        </div>
+        <div class="caption">AI Talent Search — Natural Language</div>
+      </div>
+
+      <!-- Screenshot 2 -->
+      <div class="screenshot-box">
+        <!-- REPLACE THIS with: <img src="./docs/screenshots/hr-review-queue.png" alt="Review Queue" /> -->
+        <div class="placeholder">
+          <div class="ph-icon">✅</div>
+          <p><strong>HR — Review Queue</strong><br/>Add screenshot:<br/>hr-review-queue.png</p>
+        </div>
+        <div class="caption">Review Queue — AI Extracted Profiles</div>
+      </div>
+
+      <!-- Screenshot 3 -->
+      <div class="screenshot-box">
+        <!-- REPLACE THIS with: <img src="./docs/screenshots/hr-directory.png" alt="Employee Directory" /> -->
+        <div class="placeholder">
+          <div class="ph-icon">👥</div>
+          <p><strong>HR — Employee Directory</strong><br/>Add screenshot:<br/>hr-directory.png</p>
+        </div>
+        <div class="caption">Directory — Section-wise Status View</div>
+      </div>
+
+      <!-- Screenshot 4 -->
+      <div class="screenshot-box">
+        <!-- REPLACE THIS with: <img src="./docs/screenshots/employee-dashboard.png" alt="Employee Dashboard" /> -->
+        <div class="placeholder">
+          <div class="ph-icon">📄</div>
+          <p><strong>Employee — Dashboard</strong><br/>Add screenshot:<br/>employee-dashboard.png</p>
+        </div>
+        <div class="caption">Employee Dashboard — Resume Status</div>
+      </div>
+
+    </div>
+
+    <p style="margin-top:16px; font-size:12px; color:#94a3b8; text-align:center;">
+      💡 To add screenshots: save images to <code>docs/screenshots/</code> folder and uncomment the &lt;img&gt; tags in the HTML above.
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 8 — JUDGING CRITERIA                -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s8" id="s8">
+    <div class="slide-num dark">08 / 10</div>
+    <div class="slide-label">Evaluation</div>
+    <div class="slide-title">How SkillHub scores on judging criteria</div>
+    <div class="criteria-list">
+      <div class="criterion w30">
+        <div class="weight">30%</div>
+        <div class="crit-content">
+          <h3>Working Demo — End-to-end flow</h3>
+          <p>✓ Upload PDF → AI extracts → HR reviews → HR searches → ranked results. Full flow works live. Zero hardcoded data.</p>
+          <div class="progress-bar"><div class="fill"></div></div>
+        </div>
+        <div class="check">✅</div>
+      </div>
+      <div class="criterion w25">
+        <div class="weight">25%</div>
+        <div class="crit-content">
+          <h3>AI Capability — Extraction &amp; Search reasoning</h3>
+          <p>✓ LLM extracts 15+ fields from unstructured PDF. Semantic search ranks with 0–100 score + written reasoning per candidate. Skill inference engine adds 13 rules.</p>
+          <div class="progress-bar"><div class="fill"></div></div>
+        </div>
+        <div class="check">✅</div>
+      </div>
+      <div class="criterion w20">
+        <div class="weight">20%</div>
+        <div class="crit-content">
+          <h3>Architecture &amp; Code Quality</h3>
+          <p>✓ Next.js App Router, Prisma ORM, role-based JWT auth, clean API separation, TypeScript throughout, no hardcoded data.</p>
+          <div class="progress-bar"><div class="fill"></div></div>
+        </div>
+        <div class="check">✅</div>
+      </div>
+      <div class="criterion w15">
+        <div class="weight">15%</div>
+        <div class="crit-content">
+          <h3>UX &amp; Polish — Real product feel</h3>
+          <p>✓ Status banners, match scores, AI reasoning cards, section-wise directory, pending/rejected states, loading skeletons, HR accountability tracking.</p>
+          <div class="progress-bar"><div class="fill"></div></div>
+        </div>
+        <div class="check">✅</div>
+      </div>
+      <div class="criterion w10">
+        <div class="weight">10%</div>
+        <div class="crit-content">
+          <h3>Creativity / Stretch Goals</h3>
+          <p>✓ Pending profile search (not just approved), LinkedIn URL extraction from resume, HR name accountability, dynamic example queries from real DB, skill inference engine.</p>
+          <div class="progress-bar"><div class="fill"></div></div>
+        </div>
+        <div class="check">✅</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 9 — WHAT'S NEXT                     -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s9" id="s9">
+    <div class="slide-num">09 / 10</div>
+    <div class="slide-label">Roadmap</div>
+    <div class="slide-title">What we'd build next</div>
+    <div class="next-grid">
+      <div class="next-card">
+        <div class="next-icon">🚀</div>
+        <h3>Scale Infrastructure</h3>
+        <ul>
+          <li>Migrate to PostgreSQL / Supabase</li>
+          <li>Vector embeddings for search</li>
+          <li>Deploy on Vercel + Railway</li>
+          <li>Multi-tenant support</li>
+        </ul>
+      </div>
+      <div class="next-card">
+        <div class="next-icon">🤖</div>
+        <h3>Smarter AI</h3>
+        <ul>
+          <li>Auto-suggest skills gaps per role</li>
+          <li>Learning path recommendations</li>
+          <li>Team composition optimizer</li>
+          <li>Resume improvement tips</li>
+        </ul>
+      </div>
+      <div class="next-card">
+        <div class="next-icon">🔗</div>
+        <h3>Integrations</h3>
+        <ul>
+          <li>Slack / Teams notifications</li>
+          <li>JIRA project allocation sync</li>
+          <li>LinkedIn profile import</li>
+          <li>LMS certification sync</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SLIDE 10 — THANK YOU                      -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="slide s10" id="s10">
+    <div class="slide-num">10 / 10</div>
+    <div class="deco2">🧠</div>
+    <h1>Skill<span>Hub</span></h1>
+    <p class="tagline">From resume PDF to ranked talent — in seconds. Not hours.</p>
+    <div class="built-with">
+      <span class="bw-chip">🤖 Groq · Llama 3.3 70B</span>
+      <span class="bw-chip">⚡ Next.js 14</span>
+      <span class="bw-chip">🗄️ Prisma + SQLite</span>
+      <span class="bw-chip">🎨 Tailwind CSS</span>
+      <span class="bw-chip">🔐 NextAuth.js</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

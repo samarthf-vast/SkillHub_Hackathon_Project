@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("EMPLOYEE") // "HR" | "EMPLOYEE"
+  createdAt DateTime @default(now())
+  employee  Employee?
+}
+
+model Employee {
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  email          String
+  department     String?
+  location       String?
+  designation    String?
+  currentProject String?
+  avatarUrl      String?
+  bio            String?
+  linkedinUrl    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  skills         EmployeeSkill[]
+  projects       Project[]
+  certifications Certification[]
+  profiles       Profile[]
+}
+
+model Skill {
+  id             String          @id @default(cuid())
+  name           String          @unique
+  category       String          // LANGUAGE | FRAMEWORK | PLATFORM | TOOL | DOMAIN
+  employeeSkills EmployeeSkill[]
+}
+
+model EmployeeSkill {
+  id          String   @id @default(cuid())
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  skillId     String
+  skill       Skill    @relation(fields: [skillId], references: [id])
+  proficiency String   // NOVICE | INTERMEDIATE | EXPERT
+  yearsExp    Float    @default(0)
+  inferred    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@unique([employeeId, skillId])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  role        String?
+  techStack   String   // JSON array stored as string
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model Certification {
+  id         String    @id @default(cuid())
+  employeeId String
+  employee   Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  name       String
+  issuer     String?
+  issueDate  DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model Profile {
+  id            String   @id @default(cuid())
+  employeeId    String
+  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  status        String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  source        String   @default("RESUME")  // RESUME | MANUAL | LINKEDIN
+  rawText       String?
+  extractedData String?  // JSON string of AI-extracted data
+  reviewNotes   String?
+  approvedBy    String?  // Name of the HR user who approved this profile
+  embedding     String?  // JSON array of floats for semantic search
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
