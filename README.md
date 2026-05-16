@@ -74,7 +74,7 @@ Next.js 14 App Router
   ┌─────┴──────────────────────────────────┐
   │              Prisma ORM                │
   │           SQLite Database              │
-  └─────────────────────────────────────────┘
+  └────────────────────────────────────────┘
         │
   ┌─────┴──────────┐
   │   Groq SDK     │
@@ -289,10 +289,10 @@ The review queue is the **human-in-the-loop checkpoint**. AI extraction is never
 │  ▼ Expanded Review Panel                           │
 │  Name: Rahul Sharma    Location: Pune              │
 │  Designation: Full Stack Developer                 │
-│  🔗 linkedin.com/in/rahulsharma                   │
+│  🔗 linkedin.com/in/rahulsharma                    │
 │                                                    │
 │  Skills (12)                                       │
-│  [React·5yr] [Node.js·3yr] [MongoDB·2yr] ...      │
+│  [React·5yr] [Node.js·3yr] [MongoDB·2yr] ...       │
 │                                                    │
 │  ✨ Inferred Skills                                │
 │  [JavaScript·INTERMEDIATE] [Express·NOVICE]        │
@@ -301,7 +301,7 @@ The review queue is the **human-in-the-loop checkpoint**. AI extraction is never
 │  ● Rezopay — Payment gateway [React, Node, Stripe] │
 │                                                    │
 │  Review Notes: ________________________            │
-│  [ ✓ Approve & Apply ] [ ✗ Reject ]               │
+│  [ ✓ Approve & Apply ] [ ✗ Reject ]                │
 └────────────────────────────────────────────────────┘
 ```
 
@@ -336,7 +336,7 @@ The most powerful feature. HR types any natural language query and the AI return
 ┌──────────────────────────────────────────────────┐
 │  Find Talent                                     │
 │  ┌──────────────────────────────────────────┐    │
-│  │ ✨ Who can lead a React project...        │    │
+│  │ ✨ Who can lead a React project...        │   │
 │  │                              [ Search ]  │    │
 │  └──────────────────────────────────────────┘    │
 ├──────────────────────────────────────────────────┤
@@ -346,7 +346,7 @@ The most powerful feature. HR types any natural language query and the AI return
 │ 92 │ Full Stack · Pune                           │
 │    │ ✨ 5yr React experience, worked on real-time│
 │    │    projects using Socket.IO and WebSockets  │
-│    │ [React·5yr] [Socket.IO·2yr] [Node.js·3yr]  │
+│    │ [React·5yr] [Socket.IO·2yr] [Node.js·3yr]   │
 ├────┼─────────────────────────────────────────────┤
 │ #2 │ Priya Mehta           [On project]          │
 │ 74 │ Frontend · Mumbai                           │
@@ -479,20 +479,20 @@ A dedicated page listing all profiles that have been approved, showing:
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  Approved Profiles                    7 approved  │
+│  Approved Profiles                    7 approved │
 ├──────────────────────────────────────────────────┤
 │  RS  Rahul Sharma                                │
 │      Full Stack Developer · Pune                 │
-│      [React·5yr] [Node.js·3yr] [MongoDB·2yr]    │
-│      ✅ Approved by NP Neha Patil · 3 days ago  │
+│      [React·5yr] [Node.js·3yr] [MongoDB·2yr]     │
+│      ✅ Approved by NP Neha Patil · 3 days ago   │
 ├──────────────────────────────────────────────────┤
 │  PM  Priya Mehta                                 │
 │      Frontend Developer · Mumbai                 │
 │      [Vue·3yr] [TypeScript·2yr]                  │
-│      ✅ Approved by NP Neha Patil · 5 days ago  │
+│      ✅ Approved by NP Neha Patil · 5 days ago   │
 ├──────────────────────────────────────────────────┤
 │  Approved by HR:                                 │
-│  NP Neha Patil — 7 profiles approved            │
+│  NP Neha Patil — 7 profiles approved             │
 └──────────────────────────────────────────────────┘
 ```
 
@@ -602,31 +602,31 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## 7. Environment Variables
 
-| Variable          |Req  | Description                                          |
-|-------------------|-----|------------------------------------------------------|
-| `DATABASE_URL`    | Yes | SQLite path — use `file:./dev.db` |
-| `NEXTAUTH_SECRET` | Yes | Random secret for JWT signing. Generate: `openssl rand -base64 32`         |
-| `NEXTAUTH_URL`    | Yes | App base URL — `http://localhost:3000` for local dev |
-| `GROQ_API_KEY`    | Yes | Groq API key from [console.groq.com](https://console.groq.com) |
+| Variable          |Req  | Description                                                        |
+|-------------------|-----|------------------------------------------------------              |
+| `DATABASE_URL`    | Yes | SQLite path — use `file:./dev.db`                                  |
+| `NEXTAUTH_SECRET` | Yes | Random secret for JWT signing. Generate: `openssl rand -base64 32` |
+| `NEXTAUTH_URL`    | Yes | App base URL — `http://localhost:3000` for local dev               |
+| `GROQ_API_KEY`    | Yes | Groq API key from [console.groq.com](https://console.groq.com)     |
 
 ---
 
 ## 8. API Reference
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/auth/register` | Public | Create new user account |
-| GET | `/api/employees` | Any | List employees (supports `?search=` param) |
-| GET | `/api/employees/[id]` | Any | Get single employee detail |
-| POST | `/api/employees/[id]/skills` | Employee | Add skill manually |
-| DELETE | `/api/employees/[id]/skills/[skillId]` | Employee | Remove skill |
-| POST | `/api/employees/[id]/projects` | Employee | Add project |
-| GET | `/api/profiles` | HR | List profiles (supports `?status=PENDING`) |
-| POST | `/api/profiles/approve` | HR | Approve or reject a profile |
-| POST | `/api/resume/extract` | Employee | Upload PDF, trigger AI extraction |
-| POST | `/api/search` | HR | Natural language talent search |
-| POST | `/api/auth/change-password` | Any | Change own password |
-| POST | `/api/auth/reset-password` | Public | Password reset flow |
+| Method | Endpoint                               | Auth     |  Description                               |
+|------- |--------------------------------------  |--------- | -----------------------------------------  |
+| POST   | `/api/auth/register                    | Public   | Create new user account                    |
+| GET    | `/api/employees`                       | Any      | List employees (supports `?search=` param) |
+| GET    | `/api/employees/[id]`                  | Any      | Get single employee detail                 |
+| POST   | `/api/employees/[id]/skills`           | Employee | Add skill manually                         |
+| DELETE | `/api/employees/[id]/skills/[skillId]` | Employee | Remove skill                               |
+| POST   | `/api/employees/[id]/projects`         | Employee | Add project                                |
+| GET    |   `/api/profiles`                      | HR       | List profiles (supports `?status=PENDING`) |
+| POST   | `/api/profiles/approve`                | HR       | Approve or reject a profile                |
+| POST   | `/api/resume/extract`                  | Employee | Upload PDF, trigger AI extraction          |
+| POST   | `/api/search`                          | HR       | Natural language talent search             |
+| POST   | `/api/auth/change-password`            | Any      | Change own password                        |
+| POST   | `/api/auth/reset-password`             | Public   | Password reset flow                        |
 
 ---
 
