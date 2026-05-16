@@ -21,14 +21,15 @@ export default function EmployeeDashboard() {
     if (!user?.employeeId) return;
     Promise.all([
       fetch(`/api/employees/${user.employeeId}`).then((r) => r.json()),
-      fetch(`/api/profiles?employeeId=${user.employeeId}&status=PENDING`).then((r) => r.json()),
-      fetch(`/api/profiles?employeeId=${user.employeeId}&status=APPROVED`).then((r) => r.json()),
-      fetch(`/api/profiles?employeeId=${user.employeeId}&status=REJECTED`).then((r) => r.json()),
-    ]).then(([emp, pending, approved, rejected]) => {
+      fetch(`/api/profiles?employeeId=${user.employeeId}`).then((r) => r.json()),
+    ]).then(([emp, allProfiles]) => {
       setEmployee(emp);
-      setPendingProfile(Array.isArray(pending) && pending.length > 0 ? pending[0] : null);
-      setApprovedProfile(Array.isArray(approved) && approved.length > 0 ? approved[approved.length - 1] : null);
-      setRejectedProfile(Array.isArray(rejected) && rejected.length > 0 ? rejected[rejected.length - 1] : null);
+      const profiles = Array.isArray(allProfiles)
+        ? [...allProfiles].sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+        : [];
+      setPendingProfile(profiles.find((p: any) => p.status === "PENDING") ?? null);
+      setApprovedProfile(profiles.find((p: any) => p.status === "APPROVED") ?? null);
+      setRejectedProfile(profiles.find((p: any) => p.status === "REJECTED") ?? null);
       setLoading(false);
     });
   }, [user?.employeeId]);
